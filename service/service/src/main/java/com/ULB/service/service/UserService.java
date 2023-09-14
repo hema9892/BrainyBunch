@@ -6,6 +6,8 @@ import com.ULB.service.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -27,5 +29,32 @@ public class UserService {
 
        return userRepository.save(userobj);
 
+    }
+
+    public List<String> getLoanedBooks(String username){
+        User user = userRepository.findByUsername(username);
+        if(user != null){
+            return user.getLoanedBooks();
+
+        }
+        return null;
+    }
+
+    public void loanBook(String username, String bookTitle){
+        User user = userRepository.findByUsername(username);
+        if(user!=null){
+            List<String> loanedBooks = user.getLoanedBooks();
+            loanedBooks.add(bookTitle);
+            userRepository.save(user);
+        }
+    }
+
+    public void returnBook(String username, String bookTitle){
+        User user = userRepository.findByUsername(username);
+        if(user!=null){
+            List<String> loanedBooks = user.getLoanedBooks();
+            loanedBooks.remove(bookTitle);
+            userRepository.save(user);
+        }
     }
 }
